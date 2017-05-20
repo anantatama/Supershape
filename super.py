@@ -1,5 +1,6 @@
 import numpy as np
-import matplotlib.pyplot as plt
+import pyglet
+from pyglet.gl import *
 
 def sgn(val):
 	if val > 0:
@@ -29,37 +30,21 @@ Please be careful when editing x and y equation in below function,
 wrong variable placing can cause a headache.
 I suffer headache for about 1 hour when creating this XD 
 '''
-#This one below is superellipse
-def draw(a,b,n,t):
-	na = 2/n
-	titikx = []
-	titiky = []
-	for teta in range(360):
-		x = (pangkat(np.abs(np.cos(teta)),na)) * a * sgn(np.cos(teta))
-		y = (pangkat(np.abs(np.sin(teta)),na)) * b * sgn(np.sin(teta))
-		titikx.append(x)
-		titiky.append(y)
-		plt.plot(titikx,titiky)
-	plt.axis([-3, 3, -3, 3])
-	
-	plt.savefig('plot'+str(t)+'.png')
-	plt.gcf().clear()
-
 #This one below is 2D Supershape
-def drawShape(m1, m2, a, b, n1, n2, n3, t):
-	titikx = []
-	titiky = []
-	for angle in range(360):
-		r = pangkat(hasil(kiri(m1, angle, a, n2), kanan(m2, angle, b, n3)), 1/n1)
+@win.event
+def drawShape(m1, m2, a, b, n1, n2, n3):
+	glClear(GL_COLOR_BUFFER_BIT)
+	glBegin(GL_POINTS)
+	pi = 180*12
+	
+	for angle in range(pi*100):
+		angle = angle/100
+		r = pangkat(hasil(kiri(m1, angle, a, n2), kanan(m2, angle, b, n3)), -1/n1)
 		x = r * np.cos(angle)
 		y = r * np.sin(angle)
-		titikx.append(x)
-		titiky.append(y)
-		plt.plot(titikx, titiky)
-	plt.axis([-7, 7, -7, 7])
-	#plt.show()
-	plt.savefig('plot'+str(t)+'.png')
-	plt.gcf().clear()
+		glVertex2f(x, y)
+	glEnd()
+	pyglet.app.run()
 
 #It's kinda luck to find nice looking shape if you only use your feeling to fill the variable value
 
@@ -67,28 +52,12 @@ def drawShape(m1, m2, a, b, n1, n2, n3, t):
 
 #Goodluck trying!!!
 
-m1 = 3
-m2 = 10
-a = 6
-b = 9
-n1 = 10
-n2 = 5
-n3 = 1
-t = 1
+m1 = 2
+m2 = 2
+a = 1
+b = 1
+n1 = 0.3
+n2 = 0.3
+n3 = 0.3
 
-for n in range(50):
-	#n1 = n+1
-	#m1 = n+1
-	m2 = n+2
-	drawShape(m1, m2, a, b, n1, n2, n3,t)
-	t+=1
-
-'''
-for n in range(100):
-	if n < 2:
-		pass
-	else:
-		n=n/10
-		draw(a,b,n,t)
-		t+=1
-'''
+drawShape(m1, m2, a, b, n1, n2, n3)
